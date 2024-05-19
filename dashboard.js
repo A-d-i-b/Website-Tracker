@@ -52,7 +52,7 @@ function fetchData(userEmail, selectedDate) {
       data.forEach(activity => {
         const item = document.createElement('div');
         item.classList.add('activity-item');
-        item.innerHTML = `<span class="domain">${activity.domain}</span> - <span class="time-spent">${activity.time_spent} seconds</span>`;
+        item.innerHTML = `<span class="domain">${activity.domain}</span> - <span class="time-spent">${activity.time_spent} minutes</span>`;
         activityList.appendChild(item);
       });
 
@@ -76,7 +76,7 @@ function renderChart(domains, timesSpent) {
     data: {
       labels: domains,
       datasets: [{
-        label: 'Time Spent (seconds)',
+        label: 'Time Spent (minutes)',
         data: timesSpent,
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -96,19 +96,29 @@ document.addEventListener('DOMContentLoaded', function(){
     const addButton= document.getElementById("addSiteForm");
     const siteUrl= document.getElementById("siteUrlInput");
     // const restricted= document.getElementById("restrictedList");
-    addButton.addEventListener('submit', function(event){
-      event.preventDefault();
-      const url=siteUrl.value.trim();
-      if(url){
-        addSiteToRestrictedList(url);
+    chrome.storage.local.get('userEmail', function(data) {
+      const userEmail = data.userEmail;
+      if (userEmail) {
+        addButton.addEventListener('submit', function(event){
+          event.preventDefault();
+          const url=siteUrl.value.trim();
+          if(url){
+            addSiteToRestrictedList(url,userEmail);
+          }
+        });
+        fetchRestrictedSites(userEmail);
+        
       }
+        // console.log(todayDate);
+     
     });
-    fetchRestrictedSites();
+    
 });
 
 
-function fetchRestrictedSites() {
-  fetch('http://localhost:3000/api/restricted-sites')
+function fetchRestrictedSites(userEmail) {
+  let url=`http://localhost:3000/api/restricted-sites/${userEmail}`;
+  fetch(url)
     .then(response => response.json())
     .then(data => {
       const restrictedList = document.getElementById('restrictedList');
@@ -121,7 +131,7 @@ function fetchRestrictedSites() {
         const removeButton = document.createElement('button');
         removeButton.textContent = 'Remove';
         removeButton.addEventListener('click', function() {
-          removeSiteFromRestrictedList(site.url);
+          removeSiteFromRestrictedList(site.url,userEmail);
         });
 
         // Append remove button to list item
@@ -135,17 +145,17 @@ function fetchRestrictedSites() {
       console.error('Error fetching restricted sites:', error);
     });
 }
-function addSiteToRestrictedList(siteUrl) {
+function addSiteToRestrictedList(siteUrl,userEmail) {
   fetch('http://localhost:3000/api/restricted-sites', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ siteUrl })
+    body: JSON.stringify({ siteUrl,userEmail })
   })
   .then(response => {
     if (response.ok) {
-      fetchRestrictedSites();
+      fetchRestrictedSites(userEmail);
       siteUrlInput.value = '';
     } else {
       console.error('Failed to add site to restricted list');
@@ -155,17 +165,18 @@ function addSiteToRestrictedList(siteUrl) {
     console.error('Error adding site to restricted list:', error);
   });
 }
-function removeSiteFromRestrictedList(siteUrl) {
-  fetch('http://localhost:3000/api/restricted-sites', {
+function removeSiteFromRestrictedList(siteUrl,userEmail) {
+  let url=`http://localhost:3000/api/restricted-sites`;
+  fetch(url, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ siteUrl })
+    body: JSON.stringify({ siteUrl ,userEmail})
   })
   .then(response => {
     if (response.ok) {
-      fetchRestrictedSites();
+      fetchRestrictedSites(userEmail);
     } else {
       console.error('Failed to remove site from restricted list');
     }

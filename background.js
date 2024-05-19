@@ -58,7 +58,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 function recordTimeSpent(tabId, startTime) {
   const todayDate= new Date().toISOString().split('T')[0];
   const endTime = new Date().getTime();
-  const timeSpent = Math.round((endTime - startTime)/1000);
+  const timeSpent = Math.round((endTime - startTime)/60000);
   chrome.tabs.get(tabId, tab => {
     const url = new URL(tab.url);
     const domain = url.hostname;

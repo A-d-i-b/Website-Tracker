@@ -110,9 +110,9 @@ app.post('/api/data', (req, res) => {
   });
 });
 app.post('/api/restricted-sites', (req, res) => {
-  const { siteUrl } = req.body;
-  const query = 'INSERT INTO restricted_sites (url) VALUES (?)';
-  db.query(query, [siteUrl], (err, result) => {
+  const { siteUrl ,userEmail} = req.body;
+  const query = 'INSERT INTO restricted_sites (url,email) VALUES (?,?)';
+  db.query(query, [siteUrl,userEmail], (err, result) => {
     if (err) {
       console.error('Error adding site to restricted list:', err);
       res.status(500).send('Internal server error');
@@ -121,9 +121,10 @@ app.post('/api/restricted-sites', (req, res) => {
     }
   });
 });
-app.get('/api/restricted-sites', (req, res) => {
-  const query = 'SELECT url FROM restricted_sites';
-  db.query(query, (err, results) => {
+app.get('/api/restricted-sites/:email', (req, res) => {
+  let useremail=req.params.email;
+  const query = 'SELECT url FROM restricted_sites WHERE email = ?';
+  db.query(query,[useremail] ,(err, results) => {
     if (err) {
       console.error('Error fetching restricted sites:', err);
       res.status(500).json({ error: 'Internal server error' });
@@ -133,9 +134,9 @@ app.get('/api/restricted-sites', (req, res) => {
   });
 });
 app.delete('/api/restricted-sites', (req, res) => {
-  const { siteUrl } = req.body;
-  const query = 'DELETE FROM restricted_sites WHERE url = ?';
-  db.query(query, [siteUrl], (err, result) => {
+  const { siteUrl,userEmail } = req.body;
+  const query = 'DELETE FROM restricted_sites WHERE url = ? AND email = ?';
+  db.query(query, [siteUrl,userEmail], (err, result) => {
     if (err) {
       console.error('Error removing site from restricted list:', err);
       res.status(500).send('Internal server error');

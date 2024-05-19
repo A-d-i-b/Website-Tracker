@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "chart": "^0.1.2",
+    "chart.js": "^4.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "sqlite3": "^5.1.7"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "time_extension",
+  "version": "1.0.0",
+  "main": "background.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

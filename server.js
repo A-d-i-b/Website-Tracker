@@ -37,7 +37,22 @@ app.post('/api/user/email', (req, res) => {
   });
 });
 
-
+app.get('/api/time_spent/:email/:domain/:todayDate', (req, res) => {
+  const { email, domain ,todayDate} = req.params;
+  const query = 'SELECT time_spent FROM time_tracker WHERE email = ? AND domain = ? AND date = ?';
+  db.query(query, [email, domain,todayDate], (err, results) => {
+      if (err) {
+          console.error('Error fetching time spent:', err);
+          res.status(500).json({ error: 'Internal server error' });
+          return;
+      }
+      if (results.length > 0) {
+          res.json({ time_spent: results[0].time_spent });
+      } else {
+          res.json({ time_spent: 0 });
+      }
+  });
+});
 
 
 app.get('/api/data/:email', (req, res) => {

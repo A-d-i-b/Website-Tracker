@@ -17,6 +17,24 @@ function sendEmail(email) {
     const saveEmailButton = document.getElementById('saveEmail');
     const openDashboardButton = document.getElementById('openDashboard');
     const status = document.getElementById('status');
+    const inputTime= document.getElementById('time');
+    const setButton=document.getElementById('inputTime');
+    chrome.storage.local.get('restricted_time', function(data){
+      if(data.restricted_time){
+        inputTime.value=data.restricted_time;
+      }
+    });
+    setButton.addEventListener('click',function(){
+      if(inputTime.value){
+        chrome.storage.local.set({restricted_time: inputTime.value},()=>{
+          status.textContent="Timer got set";
+          console.log('timer of:', inputTime.value);
+        })
+      }else {
+        status.textContent = 'Please enter a time';
+        console.error('User timer not provided');
+      }
+    })
   
     
     chrome.storage.local.get('userEmail', function(data) {
@@ -26,10 +44,10 @@ function sendEmail(email) {
       }
     });
   
-    saveEmailButton.addEventListener('click', function() {
+    saveEmailButton.addEventListener('click', function()  {
       const email = document.getElementById('email').value.trim();
   
-      if (email) {
+      if (email)  {
         chrome.storage.local.set({ userEmail: email }, () => {
           status.textContent = 'Email saved successfully!';
           console.log('Email saved:', email);

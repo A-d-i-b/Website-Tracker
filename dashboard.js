@@ -11,9 +11,9 @@ window.onload = function() {
     }
   }
 
-  document.getElementById('closePopup').addEventListener('click', function() {
-    document.getElementById('overlay').style.display = 'none';
-  });
+  // document.getElementById('closePopup').addEventListener('click', function() {
+  //   document.getElementById('overlay').style.display = 'none';
+  // });
 };
 document.addEventListener('DOMContentLoaded', function() {
   if (chrome && chrome.storage && chrome.storage.local) {
@@ -86,7 +86,7 @@ function renderChart(domains, timesSpent) {
   myhart=new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: domains,
+      labels: domains.map(formatLabel),
       datasets: [{
         label: 'Time Spent (minutes)',
         data: timesSpent,
@@ -136,12 +136,14 @@ function fetchRestrictedSites(userEmail) {
       const restrictedList = document.getElementById('restrictedList');
       restrictedList.innerHTML = '';
       data.forEach(site => {
-        const listItem = document.createElement('li');
+        const listItem = document.createElement('div');
         listItem.textContent = site.url;
+
+        listItem.classList.add('--restricted-list-item')
         
         // Create remove button
         const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
+        removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="8" height="8"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`;
         removeButton.addEventListener('click', function() {
           removeSiteFromRestrictedList(site.url,userEmail);
         });
@@ -196,4 +198,48 @@ function removeSiteFromRestrictedList(siteUrl,userEmail) {
   .catch(error => {
     console.error('Error removing site from restricted list:', error);
   });
+}
+
+
+function formatLabel(str, maxwidth){
+  var sections = [];
+  var words = str.split(" ");
+  var temp = "";
+
+  words.forEach(function(item, index){
+    if(temp.length > 0)
+    {
+      var concat = temp + ' ' + item;
+
+      if(concat.length > maxwidth){
+        sections.push(temp);
+        temp = "";
+      }
+      else{
+        if(index == (words.length-1)) {
+          sections.push(concat);
+          return;
+        }
+        else {
+          temp = concat;
+          return;
+        }
+      }
+    }
+
+    if(index == (words.length-1)) {
+      sections.push(item);
+      return;
+    }
+
+    if(item.length < maxwidth) {
+      temp = item;
+    }
+    else {
+      sections.push(item);
+    }
+
+  });
+
+  return sections;
 }

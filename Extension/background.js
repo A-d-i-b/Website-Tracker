@@ -1,10 +1,10 @@
 // tab timing activity: onUpdate, onActivate
 
-let RESTRICTED_TIME = 1
+let RESTRICTED_TIME = 10;
 
 
-let currentTabId = null;
-let startTime = null;
+let currentTabId = 0;
+let startTime = 0;
 let userE = '';
 
 function getDate() {

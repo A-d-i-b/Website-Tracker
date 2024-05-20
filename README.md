@@ -3,9 +3,9 @@
 
 ### For Server
 1. Clone The repo. Into your local System.
-2. `cd Backend`
-3. In a terminal execute, `npm install` 
-4. then, `npm run start` 
+2. In a terminal execute,`cd Backend`
+3. `npm install` 
+4. then, `npm run start` (Make sure All these Command Run inside Backend Folder)
 
 ### For Chrome Extension:-
 Make sure you haven't Closed the running server.
@@ -20,6 +20,6 @@ Make sure you haven't Closed the running server.
 1. It stores the time spent on every Website.
 2. It have personalized Dashboard.
 3. You can Add and Remove Websites From Restricted List(Which allows you to restrict using that site).
-4. You can Set timer for Particular Website(After which it will shows you the warning).
+4. You can Set timer for Website(After which it will shows you the warning).
 
 

@@ -1,29 +1,29 @@
 let currentTabId = null;
 let startTime = null;
 let userE='';
-async function fetchRestrictedSites() {
-  console.log("hello1");
-  const response = await fetch('http://localhost:3000/api/restricted-sites');
-  const restrictedSites = await response.json();
-  return restrictedSites;
-}
-async function checkRestrictedSite(tabId) {
-  const restrictedSites = await fetchRestrictedSites();
+// async function fetchRestrictedSites() {
+//   console.log("hello1");
+//   const response = await fetch('http://localhost:3000/api/restricted-sites');
+//   const restrictedSites = await response.json();
+//   return restrictedSites;
+// }
+// async function checkRestrictedSite(tabId) {
+//   const restrictedSites = await fetchRestrictedSites();
   
-  chrome.tabs.get(tabId, (tab) => {
-    const currentURL = new URL(tab.url).hostname;
-    if (restrictedSites.some(site => currentURL.includes(new URL(site.url).hostname))) {
-      chrome.scripting.executeScript({
-        target: {tabId: tabId},
-        func: showWarning
-      });
-    }
-  });
-}
-function showWarning() {
-  console.log("hello");
-  alert('Warning: You are visiting a restricted site!');
-}
+//   chrome.tabs.get(tabId, (tab) => {
+//     const currentURL = new URL(tab.url).hostname;
+//     if (restrictedSites.some(site => currentURL.includes(new URL(site.url).hostname))) {
+//       chrome.scripting.executeScript({
+//         target: {tabId: tabId},
+//         func: showWarning
+//       });
+//     }
+//   });
+// }
+// function showWarning() {
+//   console.log("hello");
+//   alert('Warning: You are visiting a restricted site!');
+// }
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.windows.create({
@@ -34,9 +34,10 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-
+console.log("hello");
 chrome.tabs.onActivated.addListener(activeInfo => {
-  checkRestrictedSite(activeInfo.tabId);
+  // checkRestrictedSite(activeInfo.tabId);
+
   if (currentTabId) {
     recordTimeSpent(currentTabId, startTime);
   }

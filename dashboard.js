@@ -27,6 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
           fetchData(userEmail, selectedDate);
         });
         // fetchData(userEmail);
+
+        var now = new Date();
+        fetchData(userEmail, today);
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+        datePicker.value = today;
       } else {
         console.error('User email address not found in local storage');
       }
@@ -38,10 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function fetchData(userEmail, selectedDate) {
   let url = `http://localhost:3000/api/data/${userEmail}`;
-  if (selectedDate) {
-    const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+    let formattedDate = new Date().toISOString().split('T')[0];
+    if (selectedDate) {
+      formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+    }
     url += `?date=${formattedDate}`;
-  }
+
+    console.log(url)
 
   fetch(url)
     .then(response => response.json())
@@ -108,11 +120,11 @@ document.addEventListener('DOMContentLoaded', function(){
         });
         fetchRestrictedSites(userEmail);
         
+        console.log(userEmail)
+        // fetchData(userEmail, null)
       }
         // console.log(todayDate);
-     
     });
-    
 });
 
 

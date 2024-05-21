@@ -74,8 +74,8 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.windows.create({
     url: 'popup.html',
     type: 'popup',
-    width: 400,
-    height: 300
+    width: 600,
+    height: 600
   });
 
 });

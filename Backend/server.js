@@ -8,10 +8,10 @@ const { title } = require('process');
 app.use(cors());
 app.use(bodyParser.json());
 const db = mysql.createConnection({
-  host: 'sql12.freesqldatabase.com',   
-  user: 'sql12707339',    
-  password: 'MKUY2niJ8C', 
-  database: 'sql12707339' 
+  host: 'bccabqf6igoukwnohmgr-mysql.services.clever-cloud.com',   
+  user: 'udhe8e285lpqkepk',    
+  password: 'B1rGv1MCbfqJJNqtP2y6', 
+  database: 'bccabqf6igoukwnohmgr' 
 });
 
 db.connect(err => {
